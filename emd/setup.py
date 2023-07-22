@@ -5,8 +5,8 @@ setup(
     name='emd',
     ext_modules=[
         CUDAExtension('emd', [
-            'emd.cpp',
-            'emd_cuda.cu',
+            '/content/ml3d_msn/emd/emd.cpp',
+            '/content/ml3d_msn/emd/emd_cuda.cu',
         ]),
     ],
     cmdclass={

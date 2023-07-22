@@ -5,8 +5,8 @@ setup(
     name='MDS',
     ext_modules=[
         CUDAExtension('MDS', [
-            'MDS_cuda.cu',
-            'MDS.cpp',
+            '/content/ml3d_msn/MDS/MDS_cuda.cu',
+            '/content/ml3d_msn/MDS/MDS.cpp',
         ]),
     ],
     cmdclass={

@@ -5,8 +5,8 @@ setup(
     name='expansion_penalty',
     ext_modules=[
         CUDAExtension('expansion_penalty', [
-            'expansion_penalty.cpp',
-            'expansion_penalty_cuda.cu',
+            '/content/ml3d_msn/expansion_pentaly/expansion_penalty.cpp',
+            '/content/ml3d_msn/expansion_pentaly/expansion_penalty_cuda.cu',
         ]),
     ],
     cmdclass={
