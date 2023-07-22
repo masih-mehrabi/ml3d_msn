@@ -11,4 +11,7 @@ setup(
     ],
     cmdclass={
         'build_ext': BuildExtension
-    })
+    }
+    script_args=['build_ext', '--build-lib', '/content/ml3d_msn/expansion_penalty']
+
+    )
