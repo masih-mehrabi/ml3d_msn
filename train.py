@@ -11,11 +11,11 @@ from utils import *
 import os
 import json
 import time, datetime
-import visdom
 from time import time
 sys.path.append("./emd/")
 import emd_module as emd
 from model_utils import calc_dcd
+import matplotlib.pyplot as plt
 
 
 parser = argparse.ArgumentParser()
@@ -63,7 +63,6 @@ class FullModel(nn.Module):
         return output1, output2, emd1, emd2 , expansion_penalty
 
 if __name__ == '__main__':
-    vis = visdom.Visdom(port = 8097, env=opt.env) # set your port
     now = datetime.datetime.now()
     save_path = str(now.timestamp())
     if not os.path.exists('./log/'):
@@ -147,35 +146,7 @@ if __name__ == '__main__':
 
             if i % 10 == 0:
                 idx = random.randint(0, input.size()[0] - 1)
-                vis.scatter(X = gt.contiguous()[idx].data.cpu()[:, :3],
-                        win = 'TRAIN_GT',
-                        opts = dict(
-                            title = id[idx],
-                            markersize = 2,
-                            ),
-                        )
-                vis.scatter(X = input.transpose(2,1).contiguous()[idx].data.cpu(),
-                        win = 'TRAIN_INPUT',
-                        opts = dict(
-                            title = id[idx],
-                            markersize = 2,
-                            ),
-                        )
-                vis.scatter(X = output1[idx].data.cpu(),
-                        Y = labels_generated_points[0:output1.size(1)],
-                        win = 'TRAIN_COARSE',
-                        opts = dict(
-                            title= id[idx],
-                            markersize=2,
-                            ),
-                        )
-                vis.scatter(X = output2[idx].data.cpu(),
-                        win = 'TRAIN_OUTPUT',
-                        opts = dict(
-                            title= id[idx],
-                            markersize=2,
-                            ),
-                        )
+             
             if opt.loss ==1:
                 print(opt.env + ' train [%d: %d/%d]  emd1: %f emd2: %f expansion_penalty: %f' %(epoch, i, len_dataset/opt.batchSize, emd_dcd1.mean().item(), emd_dcd2.mean().item(), expansion_penalty.mean().item()))
             elif opt.loss ==2:
@@ -197,35 +168,6 @@ if __name__ == '__main__':
                     output1, output2, emd1, emd2, expansion_penalty  = network(input, gt.contiguous(), 0.004, 3000)
                     val_loss.update(emd2.mean().item())
                     idx = random.randint(0, input.size()[0] - 1)
-                    vis.scatter(X = gt.contiguous()[idx].data.cpu()[:, :3],
-                            win = 'VAL_GT',
-                            opts = dict(
-                                title = id[idx],
-                                markersize = 2,
-                                ),
-                            )
-                    vis.scatter(X = input.transpose(2,1).contiguous()[idx].data.cpu(),
-                            win = 'VAL_INPUT',
-                            opts = dict(
-                                title = id[idx],
-                                markersize = 2,
-                                ),
-                            )
-                    vis.scatter(X = output1[idx].data.cpu(),
-                            Y = labels_generated_points[0:output1.size(1)],
-                            win = 'VAL_COARSE',
-                            opts = dict(
-                                title= id[idx],
-                                markersize=2,
-                                ),
-                            )
-                    vis.scatter(X = output2[idx].data.cpu(),
-                            win = 'VAL_OUTPUT',
-                            opts = dict(
-                                title= id[idx],
-                                markersize=2,
-                                ),
-                            )
                     if opt.loss ==1:
                         print(opt.env + ' train [%d: %d/%d]  emd1: %f emd2: %f expansion_penalty: %f' %(epoch, i, len_dataset/opt.batchSize, emd_dcd1.mean().item(), emd_dcd2.mean().item(), expansion_penalty.mean().item()))
                     elif opt.loss ==2:
@@ -234,14 +176,14 @@ if __name__ == '__main__':
                         raise NotImplementedError("Not implemented yet")
         val_curve.append(val_loss.avg)
 
-        vis.line(X=np.column_stack((np.arange(len(train_curve)),np.arange(len(val_curve)))),
-                     Y=np.column_stack((np.array(train_curve),np.array(val_curve))),
-                     win='loss',
-                     opts=dict(title="emd", legend=["train_curve" + opt.env, "val_curve" + opt.env], markersize=2, ), )
-        vis.line(X=np.column_stack((np.arange(len(train_curve)),np.arange(len(val_curve)))),
-                     Y=np.log(np.column_stack((np.array(train_curve),np.array(val_curve)))),
-                     win='log',
-                     opts=dict(title="log_emd", legend=["train_curve"+ opt.env, "val_curve"+ opt.env], markersize=2, ), )
+        plt.figure()
+        plt.plot(range(len(train_curve)), train_curve, label='Train')
+        plt.plot(range(len(val_curve)), val_curve, label='Validation')
+        plt.xlabel('Epoch')
+        plt.ylabel('Loss')
+        plt.title('Training Curve')
+        plt.legend()
+        plt.show()
         
         log_table = {
           "train_loss" : train_loss.avg,
