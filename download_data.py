@@ -43,7 +43,7 @@ def login_and_get_file():
                 file_response.raise_for_status()  # Check for any HTTP error response
                 if file_response.status_code == 200:
                     # Set the destination file path
-                    destination = "/content/modelnet10.zip"
+                    destination = "/content/ml3d_msn/data/modelnet10.zip"
                     with open(destination, "wb") as f:
                         for chunk in file_response.iter_content(chunk_size=8192000):
                             f.write(chunk)
