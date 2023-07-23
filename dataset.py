@@ -19,9 +19,9 @@ class ModelNet(data.Dataset):
         assert split in ["train", "test", "val"]
         self.split = split
         if split == "train" or split == "val":
-            self.dataset_path = f'./data/modelnet10/point_clouds{"_noisy" if noisy else ""}/train/pcd'
+            self.dataset_path = f'/content/ml3d_msn/data/modelnet10/point_clouds{"_noisy" if noisy else ""}/train/pcd'
         elif split == "test":
-            self.dataset_path = f'./data/modelnet10/point_clouds{"_noisy" if noisy else ""}/test/pcd'
+            self.dataset_path = f'/content/ml3d_msn/data/modelnet10/point_clouds{"_noisy" if noisy else ""}/test/pcd'
 
         self.npoints = npoints
         self.train = split == "train"
@@ -49,7 +49,7 @@ class ModelNet(data.Dataset):
         partial = read_pcd(os.path.join(self.dataset_path, model_id, f'{scan_id}.pcd'))
         split = "test" if self.split == "test" else "train"
         full_name = model_id.split("_")[0] + "_" + split + "_" + model_id
-        complete = read_pcd(os.path.join("./data/modelnet10/point_clouds/complete/", '%s.pcd' % full_name))
+        complete = read_pcd(os.path.join("/content/ml3d_msn/data/modelnet10/point_clouds/complete/", '%s.pcd' % full_name))
         return model_id, resample_pcd(partial, 5000), resample_pcd(complete, self.npoints)
 
     def __len__(self):
@@ -59,9 +59,9 @@ class ModelNet(data.Dataset):
 class ShapeNet(data.Dataset): 
     def __init__(self, train = True, npoints = 81921):
         if train:
-            self.list_path = './data/train.list'
+            self.list_path = '/content/ml3d_msn/data/train.list'
         else:
-            self.list_path = './data/val.list'
+            self.list_path = '/content/ml3d_msn/data/val.list'
         self.npoints = npoints
         self.train = train
 
@@ -77,10 +77,10 @@ class ShapeNet(data.Dataset):
             pcd = o3d.io.read_point_cloud(filename)
             return torch.from_numpy(np.array(pcd.points)).float()
         if self.train:
-            partial = read_pcd(os.path.join("./data/train/", model_id + '_%d_denoised.pcd' % scan_id))
+            partial = read_pcd(os.path.join("/content/ml3d_msn/data/train/", model_id + '_%d_denoised.pcd' % scan_id))
         else:
-            partial = read_pcd(os.path.join("./data/val/", model_id + '_%d_denoised.pcd' % scan_id))
-        complete = read_pcd(os.path.join("./data/complete/", '%s.pcd' % model_id))       
+            partial = read_pcd(os.path.join("/content/ml3d_msn/data/val/", model_id + '_%d_denoised.pcd' % scan_id))
+        complete = read_pcd(os.path.join("/content/ml3d_msn/data/complete/", '%s.pcd' % model_id))       
         return model_id, resample_pcd(partial, 5000), resample_pcd(complete, self.npoints)
 
     def __len__(self):

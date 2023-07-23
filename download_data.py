@@ -25,8 +25,6 @@ def login_and_get_file():
     cookies_dict = requests.utils.dict_from_cookiejar(response.cookies)
     prefix = cookies_dict.get(".ASPXAUTH", "")
     token = prefix.split("=", 1)[1] if "=" in prefix else ""
-    print(prefix)
-    print(token)
 
     # Step 2: Send a GET request to download the file using the saved cookie prefix and token
     download_url = f"https://webdisk.ads.mwn.de/Handlers/Download.ashx?file=Home%2Fmodelnet10.zip&action=download"

@@ -7,9 +7,9 @@ from torch.autograd import Variable
 import numpy as np
 import torch.nn.functional as F
 import sys
-sys.path.append("./expansion_penalty/")
+sys.path.append("/content/ml3d_msn/expansion_penalty/")
 import expansion_penalty_module as expansion
-sys.path.append("./MDS/")
+sys.path.append("/content/ml3d_msn/MDS/")
 import MDS_module
 from pointnet2_utils import PointNetSetAbstractionMsg, PointNetSetAbstraction
 from point_conv_utils import PointConvDensitySetAbstraction

@@ -12,7 +12,7 @@ import os
 import json
 import time, datetime
 from time import time
-sys.path.append("./emd/")
+sys.path.append("/content/ml3d_msn/emd/")
 import emd_module as emd
 from model_utils import calc_dcd
 import matplotlib.pyplot as plt
@@ -21,7 +21,7 @@ import matplotlib.pyplot as plt
 parser = argparse.ArgumentParser()
 parser.add_argument('--batchSize', type=int, default=4, help='input batch size')
 parser.add_argument('--workers', type=int, help='number of data loading workers', default=12)
-parser.add_argument('--nepoch', type=int, default=25, help='number of epochs to train for')
+parser.add_argument('--nepoch', type=int, default=1, help='number of epochs to train for')
 parser.add_argument('--model', type=str, default = '',  help='optional reload model path')
 parser.add_argument('--num_points', type=int, default = 8192,  help='number of points')
 parser.add_argument('--n_primitives', type=int, default = 16,  help='number of surface elements')
